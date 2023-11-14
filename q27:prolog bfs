@@ -1,0 +1,20 @@
+connected(a, b).
+connected(a, c).
+connected(b, d).
+connected(b, e).
+connected(c, f).
+connected(c, g).
+connected(d, h).
+connected(e, i).
+bfs(Start, Goal, Path) :-
+    bfs_queue([node(Start, [])], Goal, PathRev),
+    reverse(PathRev, Path).
+bfs_queue([node(Goal, Path)|_], Goal, [Goal|Path]).
+bfs_queue([node(Node, Path)|Nodes], Goal, FinalPath) :-
+    findall(node(Neighbor, [Node|Path]),
+            (connected(Node, Neighbor), \+ member(Neighbor, [Node|Path])),
+            NewNodes),
+    append(Nodes, NewNodes, UpdatedNodes),
+    bfs_queue(UpdatedNodes, Goal, FinalPath).
+find_bfs_path(Start, Goal, Path) :-
+    bfs(Start, Goal, Path).
